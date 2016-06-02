@@ -29,7 +29,7 @@ var fs = require('fs'),
     Player = {
         card: [], // карты игрока
         totalSum: 0, // сумма набранных очков
-        win: 0, // 1 - победа, 1 - поражение
+        win: 0, // 1 - победа, 0 - поражение
         addCard: function(el) { // игрок берет карту
             this.card.push(el);
             if ((/^[вдк]/i).test(el)) { // валет, дама, король
@@ -51,9 +51,10 @@ var fs = require('fs'),
     },
     Diler = {
         card: [], // карты дилера
-        win: 0, // 1 - победа, 1 - поражение
+        win: 0, // 1 - победа, 0 - поражение
         totalSum: 0 // сумма набранных очков
-    };
+    },
+    winner; // победитель
 
 /**
  * Игровой процесс
@@ -63,7 +64,7 @@ try {
         throw ('Путь к файлу логов указан неверно (--path scorebj.txt)');
     }
 
-// Перемешивание колоды
+    // Перемешивание колоды
     arr.sort(function (a, b) {
         return Math.random() - 0.5;
     });
@@ -74,14 +75,19 @@ try {
             Player.addCard(arr.pop());
             console.log(Player.getCards());
             start = true;
-        } else {
+
+            if (Player.totalSum > 21) {
+                Diler.win++;
+                winner = '0:1 You lost!';
+                gameOver();
+            }
+        } else if ('n' == answer || 'N' == answer) {
             if (start == false) {
                 console.log('Game over');
                 rl.close();
             } else {
-                var winner;
 
-                while (Diler.totalSum < 15) {
+                while (Diler.totalSum < 17) {
                     Player.addCard.call(Diler, arr.pop());
                 }
 
@@ -100,31 +106,31 @@ try {
                     Player.win++;
                     winner = '1:0 You won!';
                 }
-                console.log('Ваши карты: ' + Player.getCards());
-                console.log('Карты дилера: ' + Player.getCards.call(Diler));
-                console.log(winner + ' Общий счет: ' + Player.win + '(вы) : ' + Diler.win + ' (дилер)');
-
-                /* Не понимаю, как бросить исключение при синхронном варианте записи в файл, т.к. ф-ция всегда возвращает undefined
-                if (!fs.appendFileSync(argv['path'], winner + '\n')) {
-                    throw ('Ошибка записи в файл');
-                }
-                */
-                // Запись в файл итога игры
-                fs.appendFile(argv['path'], winner + '\n', function (err) {
-                    if (err) { throw ('Ошибка записи в файл ' + err);}
-
-                });
-
-                // Обнуление карт и суммы очков у игрока и дилера
-                Player.card = [];
-                Player.totalSum = 0;
-                Diler.card = [];
-                Diler.totalSum = 0;
-                start = false; // Партия окончена
-                console.log('Карту? (y, n)');
+                gameOver();
             }
+        } else {
+            console.log('Неверная команда. Карту? (y, n)');
         }
     });
 } catch (err) {
     console.error(err);
+}
+
+function gameOver() {
+    console.log('Ваши карты: ' + Player.getCards());
+    console.log('Карты дилера: ' + Player.getCards.call(Diler));
+    console.log(winner + ' Общий счет: ' + Player.win + '(вы) : ' + Diler.win + ' (дилер)');
+    // Запись в файл итога игры
+    fs.appendFile(argv['path'], winner + '\n', function (err) {
+        if (err) { throw ('Ошибка записи в файл ' + err);}
+
+    });
+
+    // Обнуление карт и суммы очков у игрока и дилера
+    Player.card = [];
+    Player.totalSum = 0;
+    Diler.card = [];
+    Diler.totalSum = 0;
+    start = false; // Партия окончена
+    console.log('Карту? (y, n)');
 }

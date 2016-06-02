@@ -9,3 +9,15 @@
 1:0 You won!
 1:0 You won!
 0:0 Drawn game!
+0:1 You lost!
+0:1 You lost!
+1:0 You won!
+0:0 Drawn game!
+0:1 You lost!
+0:1 You lost!
+1:0 You won!
+1:0 You won!
+0:1 You lost!
+0:1 You lost!
+0:1 You lost!
+1:0 You won!
