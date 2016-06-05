@@ -11,10 +11,7 @@ var req = require('request'),
     url = require('url'),
     querystring = require('querystring'),
     PORT = 3333,
-    textBefore, // текст для перевода (сохраняется как промежуточное значение для вывода клиенту)
-    lang = ['en-ru', 'ru-en'], // массив направлений перевода для select
-    text = 'car', // текст перевода со значением по умолчанию
-    result = ''; // результат перевода
+    lang = ['en-ru', 'ru-en']; // массив направлений перевода для select
 
 // Страница с формой для клиента
 function doPage(lang, textBefore, textAfter) {
@@ -36,7 +33,7 @@ var qry = function(requrl){
 };
 
 // Формирование и отправка запроса на сторонний сервер для перевода
-function sendReq(lg, text) {
+function sendReq(lg, text, response) {
     var fullUrl = 'https://translate.yandex.net/api/v1.5/tr.json/translate?' + querystring.stringify({
             key: 'trnsl.1.1.20160603T145147Z.c67f521741d3dba0.f271c5f156819d8f7397d34b31ee8189c95f7229',
             lang: lg, // Направление перевода
@@ -47,7 +44,9 @@ function sendReq(lg, text) {
             if (error) {
                 console.log(error);
             } else {
-                result = JSON.parse(html).text.toString(); // Результат перевода
+                response.writeHead(200, {'Content-Type': 'text/html'}); // Ответ пользователю
+                response.write(doPage(lang, text, JSON.parse(html).text.toString())); // Форма с результатом ответа
+                response.end();
             }
         }
     );
@@ -58,16 +57,9 @@ var serv = function (req, res) {
     // Разбор url (у формы /post)
     switch (req.url.substring(1,5)) {
         case 'post' :
-            text = qry(req.url).text;
+            var text = qry(req.url).text;
             if (text) {
-                sendReq(qry(req.url).lang, text);
-                setTimeout(function() { // вынужденная задержка
-                    res.writeHead(200, {'Content-Type': 'text/html'});
-                    res.write(doPage(lang, text, result));
-                    result = '';
-                    res.end();
-                }, 500);
-
+                sendReq(qry(req.url).lang, text, res); // Отправка запроса на сервер переводчика
             } else { // если не введена фраза для перевода
                 res.writeHead(200, {'Content-Type': 'text/html'});
                 res.write(doPage(lang, '', 'Введите слово для перевода'));
