@@ -20,17 +20,13 @@ var url = 'https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1
     urlFull,
     request = require('request');
 
-try {
     if (!argv.lang || argv.lang == '') {
-        throw ('Язык перевода указан неверно (--lang en-ru --text word) или (--lang ru-en --text слово)');
+        console.error ('Язык перевода указан неверно (--lang en-ru --text word) или (--lang ru-en --text слово)');
     }
 
     if(!argv.text || argv.text == '') {
-        throw ('Не указано слово для перевода (--lang en-ru --text word) или (--lang ru-en --text слово)');
+        console.error ('Не указано слово для перевода (--lang en-ru --text word) или (--lang ru-en --text слово)');
     }
-} catch (err) {
-    console.error(err);
-}
 
 urlFull = url + '&lang=' + argv.lang + '&text=' + encodeURIComponent(argv.text); // запрос к серверу
 
