@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Новости</title>
+</head>
+<body>
+<form action="/" method="post">
+<a href="/getcategories">Обновить список категорий</a><br><br>
+    <label for="categories">Выберите категорию: </label>
+    <select id="categories" name="categories">
+        {{#each categories as |cat catId|}}
+                <option value="{{cat}}" {{#ifCond cat ../category}}selected{{/ifCond}}>{{cat}}</option>
+        {{/each}}
+    </select><br><br>
+    <label for="num">Количество новостей: </label>
+    <input type="number" id="num" name="num" min="0" max="25" value="{{num}}"><br><br>
+    <input type="submit" value="Показать новости"><br>
+</form>
+
+<div>
+    <h1>{{category}} {{#if num}}  (Всего: {{num}}){{/if}}</h1>
+    {{#each news}}
+        <h4>{{{this.title}}}</h4>
+        <p>Опубликовано: {{this.pubDate}}</p>
+        <p>{{{this.description}}}</p>
+        <hr>
+    {{/each}}
+</div>
+</body>
+</html>
