@@ -49,8 +49,8 @@ app.post('/', function (req, res) {
     now.setTime(now.getTime() + 2000000);
 
     // Запись COOKIE
-    res.append('Set-Cookie', 'category=' + encodeURIComponent(req.body.categories) + '; path=/; end=' + now.toGMTString());
-    res.append('Set-Cookie', 'num=' + req.body.num + '; path=/; end=' + now.toGMTString());
+    res.append('Set-Cookie', 'category=' + encodeURIComponent(req.body.categories) + '; Path=/; HttpOnly; expires=' + now.toGMTString());
+    res.append('Set-Cookie', 'num=' + req.body.num + '; Path=/; HttpOnly; expires=' + now.toGMTString());
 });
 
 app.listen(PORT, function () {
