@@ -4,7 +4,7 @@ var express = require('express'),
     Handlebars = require('handlebars'),
     app = express(),
     PORT = 7777,
-    parserNews = require('./scripts/getnews'),
+    parserNews = require('./lib/getnews'),
     cookieParser = require('cookie-parser');
     //parseXML = require('xml2js').parseString;
 
