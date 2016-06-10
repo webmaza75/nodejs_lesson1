@@ -4,9 +4,9 @@ var express = require('express'),
     Handlebars = require('handlebars'),
     app = express(),
     PORT = 7777,
-    parserNews = require('./js/getnews.js'),
-    parseCats = require('./js/getcategories.js'),
+    parserNews = require('./scripts/getnews'),
     cookieParser = require('cookie-parser');
+    //parseXML = require('xml2js').parseString;
 
 // Сравнение двух значений для указания selected выбранного элемента <option> списка категорий
 Handlebars.registerHelper('ifCond', function(v1, v2, options) {
@@ -31,13 +31,9 @@ app.use(
 );
 
 app.get('/', function (req, res) {
-        req.body.num = (req.cookies.num || 1);
-        req.body.categories = (req.cookies.category || 'Россия');
-        parserNews.getNews(res, req.body.categories, req.body.num);
-});
-
-app.get('/getcategories', function (req, res) {
-    parseCats.getCategories(res);
+        var num = (req.cookies.num || 1),
+            catName = (req.cookies.category || 'Россия');
+        parserNews.getNews(res, catName, num);
 });
 
 // Обработка POST запроса
