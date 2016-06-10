@@ -31,9 +31,7 @@ app.use(
 );
 
 app.get('/', function (req, res) {
-        var num = (req.cookies.num || 1),
-            catName = (req.cookies.category || 'Россия');
-        parserNews.getNews(res, catName, num);
+    parserNews.getNews(res, (req.cookies.category || 'Россия'), (req.cookies.num || 1));
 });
 
 // Обработка POST запроса
