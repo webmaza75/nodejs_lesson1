@@ -5,7 +5,7 @@ CREATE DATABASE IF NOT EXISTS `todo`;
 CREATE TABLE `todos` (
 `id` SERIAL PRIMARY KEY,
 `text` VARCHAR(255) NOT NULL,
-`completed` VARCHAR(255) NOT NULL default 0
+`completed` tinyint NOT NULL default 0
 );
 
 /* Добавление к таблице поля priority со значением по умолчанию */
