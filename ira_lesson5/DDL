@@ -1,0 +1,13 @@
+/* Создание БД, если ее нет */
+CREATE DATABASE IF NOT EXISTS `todo`;
+
+/* Создание таблицы, если ее нет */
+CREATE TABLE `todos` (
+`id` SERIAL PRIMARY KEY,
+`text` VARCHAR(255) NOT NULL,
+`completed` VARCHAR(255) NOT NULL default 0
+);
+
+/* Добавление к таблице поля priority со значением по умолчанию */
+ALTER TABLE `todos`
+ADD `priority` int UNSIGNED NOT NULL default 0;
