@@ -1,0 +1,11 @@
+/* Создание БД, если ее нет */
+CREATE DATABASE IF NOT EXISTS `lenta`;
+
+/* Создание таблицы, если ее нет */
+CREATE TABLE `news` (
+`id` SERIAL PRIMARY KEY,
+`title` VARCHAR(100) NOT NULL,
+`description` TEXT NOT NULL,
+`pub_date` date,
+`category` VARCHAR(100) NOT NULL default 'Без категории'
+);
