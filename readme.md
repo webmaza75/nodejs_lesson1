@@ -7,4 +7,4 @@
 Исправлено:
 1 - 3. 
 По п.5 есть вопрос: о какой именно проблеме идет речь: https://github.com/webmaza75/try_nodejs/blob/master/ira_lesson7/lib/getnews.js#L8 (получение новостей для БД) 
-или методе получения конкретного получения новостей из выбранной категории: https://github.com/webmaza75/try_nodejs/blob/master/ira_lesson7/lib/pool-server.js#L9 ?
+или методе получения новостей из выбранной категории: https://github.com/webmaza75/try_nodejs/blob/master/ira_lesson7/lib/pool-server.js#L9 ?
