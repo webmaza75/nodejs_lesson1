@@ -1,48 +1,23 @@
 todoList = require('./todolist.js');
 // Показ новостей в разных шаблонах
 var news = {
-    showAllCats: function (req, res, templateName) { // список новостей
-        function tryRender() {
-            if (typeof res.categories != 'undefined' && typeof res.news != 'undefined') {
-                var username = req.user ? req.user.displayName : '';
-                res.render(templateName, {
-                    news: res.news,
-                    category: (req.session.category || 'Россия'),
-                    num: (req.session.num || 2),
-                    username: username,
-                    categories: res.categories
-                });
-            }
-        }
+    showAllCats: function (data, callback1, callback2) { // список новостей
 
         // Показ всех категорий для select
         todoList.allcats(function (rows) {
-            res.categories = rows;
-            tryRender();
+            callback1(rows);
         });
 
         // Показ новостей по выбранной категории с лимитом = num
-        todoList.all((req.session.category || 'Россия'), (req.session.num || 2), function (rows) {
-            res.news = rows;
-            tryRender();
+        todoList.all(data.category, data.num, function (news) {
+            callback2(news);
         });
     },
 
-    showArticle: function (req, res, templateName) { // одна новость
-        function tryRenderOne() {
-            if (typeof res.article != 'undefined') {
-
-                res.render(templateName, {
-                    article: res.article,
-                    username: req.user.displayName
-                });
-            }
-        }
-
+    showArticle: function (id, callback1) { // одна новость
         // Показ новостей по выбранной категории с лимитом = num
-        todoList.one((req.params.id), function(rows) {
-            res.article = rows[0];
-            tryRenderOne();
+        todoList.one(id, function(rows) {
+            callback1(rows[0]);
         });
     },
     changeArticle: function(id, data) { // новость для редактирования

@@ -3,9 +3,8 @@ var request = require('request'),
 
 /**
  * Получение запрашиваемого количества новостей
-
  */
-var getNews = function (res) {
+var getNews = function (callback) {
 
     request('https://lenta.ru/rss/news', function (error, response, body) {
 
@@ -42,7 +41,7 @@ var getNews = function (res) {
                 todoList.add(news);
                 news = {};
             }
-            res.redirect('/admin/news');
+            callback('/admin/news');
         }
     });
 };
