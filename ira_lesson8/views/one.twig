@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Новости</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+    <div class="alert alert-default">{% if username != '' %}Добро пожаловать, <strong><span class="text-danger">{{ username }}</span></strong>! Вам доступна <a class="text-success" href="/admin/news"><b>Админ-панель</b></a> | <a href="/logout">Выход</a>{% else %}<a href="/login">Вход</a>{% endif %}</div>
+
+    <hr>
+    <div>
+        <h1>Редактирование новости</h1>
+        <br />
+
+        <form method="post" action="/admin/news">
+            <div class="form-group">
+                <label for="title">Заголовок</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Заголовок" value="{{ article.title }}" required>
+            </div>
+            <div class="form-group">
+                <label for="pub_date">Дата публикации</label>
+                <input type="date" class="form-control" id="pub_date" name="pub_date" value="{{ article.pub_date | date("Y-m-d") }}" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Анонс новости</label>
+                <textarea rows="7" class="form-control" id="description" name="description" required>{{ article.description }}</textarea>
+            </div>
+
+            {% if article.id %}<input type="hidden" name="id" value="{{article.id }}">{% endif %}
+
+            <button id="btn" type="submit" class="btn btn-success">Сохранить</button>
+            <button type="reset" class="btn btn-danger">Отмена</button>
+        </form>
+    </div>
+</div>
+<script>
+    var socket = io();
+    $('.btn').click(function(event){
+        event.preventDefault(); // запрет на стандартное действие (отправка данных формы методом post)
+        var data = {};
+
+        $('input, textarea').each(function(idx, v) {
+            data[$(v).attr('name')] = $(v).val();
+        });
+
+        socket.emit('put', data );
+        //socket.on('put', function (data) {
+        //});
+        window.location.replace('/admin/news'); // отложенный редирект
+    });
+</script>
+</body>
+</html>
